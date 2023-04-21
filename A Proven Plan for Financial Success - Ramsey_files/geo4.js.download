@@ -1,0 +1,17 @@
+(function(){
+  window['optimizely'] = window['optimizely'] || [];
+  window['optimizely'].push(['activateGeoDelayedExperiments', {
+    'location':{
+      'city': "CAPETOWN",
+      'continent': "AF",
+      'country': "ZA",
+      'region': "",
+      'dma': ""
+    },
+    'ip':"102.217.185.85"
+  }]);
+})
+//
+()
+
+;

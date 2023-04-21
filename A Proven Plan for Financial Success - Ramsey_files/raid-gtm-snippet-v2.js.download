@@ -1,0 +1,47 @@
+/** Add referrer policy to HEAD **/
+var meta = document.createElement('meta');
+meta.name = "referrer";
+meta.content = "no-referrer-when-downgrade";
+document.getElementsByTagName('head')[0].appendChild(meta);
+
+/** Capture and add RAID to links going to TaxSlayer **/
+var myDiv = document.getElementById("main");
+var as = myDiv.querySelectorAll("a");
+
+for (var i = 0, len = as.length; i < len; i++) {
+    if (/ramseysmarttax\.taxslayer\.com/.test(as[i].href)) {
+        as[i].setAttribute('data-raid-token', '');
+    }
+}
+
+/** RAID Library **/
+!function(n){var t={};function e(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return n[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}e.m=n,e.c=t,e.d=function(n,t,r){e.o(n,t)||Object.defineProperty(n,t,{enumerable:!0,get:r})},e.r=function(n){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(n,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(n,"__esModule",{value:!0})},e.t=function(n,t){if(1&t&&(n=e(n)),8&t)return n;if(4&t&&"object"==typeof n&&n&&n.__esModule)return n;var r=Object.create(null);if(e.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:n}),2&t&&"string"!=typeof n)for(var o in n)e.d(r,o,function(t){return n[t]}.bind(null,o));return r},e.n=function(n){var t=n&&n.__esModule?function(){return n.default}:function(){return n};return e.d(t,"a",t),t},e.o=function(n,t){return Object.prototype.hasOwnProperty.call(n,t)},e.p="",e(e.s=250)}({120:function(n,t,e){"use strict";function r(n){var t=n.replace(/[\[]/,"\\[").replace(/[\]]/,"\\]"),e=new RegExp("[\\?&]".concat(t,"=([^&#]*)")).exec(window.location.search);return null===e?"":decodeURIComponent(e[1].replace(/\+/g," "))}e.r(t),e.d(t,"RAID_STORAGE_KEY",(function(){return f})),e.d(t,"RAID_QUERY_PARAM",(function(){return l})),e.d(t,"setRAID",(function(){return d})),e.d(t,"storeRAID",(function(){return a})),e.d(t,"getRAID",(function(){return i})),e.d(t,"setRAIDInput",(function(){return c})),e.d(t,"pushRAID",(function(){return s}));var o=e(76),u=e.n(o),a=function(){var n=r(l);""===n?window.localStorage.getItem(f)||window.localStorage.setItem(f,u()()):window.localStorage.setItem(f,n)},i=function(){return window.localStorage.getItem(f)},c=function(){var n=document.getElementsByName("ramsey_anonymous_id");if(n.length){var t=i();Array.prototype.forEach.call(n,(function(n){return n.value=t}))}},f="ramseyAnonymousId",l="raid",d=function(){var n=r(l);""===n?window.localStorage.getItem(f)||window.localStorage.setItem(f,u()()):window.localStorage.setItem(f,n)},s=function(){window.gtmDataLayer=window.gtmDataLayer||[],window.gtmDataLayer.push({ramseyAnonymousId:i()})}},188:function(n,t){var e="undefined"!=typeof crypto&&crypto.getRandomValues&&crypto.getRandomValues.bind(crypto)||"undefined"!=typeof msCrypto&&"function"==typeof window.msCrypto.getRandomValues&&msCrypto.getRandomValues.bind(msCrypto);if(e){var r=new Uint8Array(16);n.exports=function(){return e(r),r}}else{var o=new Array(16);n.exports=function(){for(var n,t=0;t<16;t++)0==(3&t)&&(n=4294967296*Math.random()),o[t]=n>>>((3&t)<<3)&255;return o}}},189:function(n,t){for(var e=[],r=0;r<256;++r)e[r]=(r+256).toString(16).substr(1);n.exports=function(n,t){var r=t||0;return[e[n[r++]],e[n[r++]],e[n[r++]],e[n[r++]],"-",e[n[r++]],e[n[r++]],"-",e[n[r++]],e[n[r++]],"-",e[n[r++]],e[n[r++]],"-",e[n[r++]],e[n[r++]],e[n[r++]],e[n[r++]],e[n[r++]],e[n[r++]]].join("")}},250:function(n,t,e){n.exports=e(251)},251:function(n,t,e){"use strict";e.r(t);var r=e(120);window.RAID=r},76:function(n,t,e){var r=e(188),o=e(189);n.exports=function(n,t,e){var u=t&&e||0;"string"==typeof n&&(t="binary"===n?new Array(16):null,n=null);var a=(n=n||{}).random||(n.rng||r)();if(a[6]=15&a[6]|64,a[8]=63&a[8]|128,t)for(var i=0;i<16;++i)t[u+i]=a[i];return t||o(a)}}});
+
+/** RAID Handling **/
+var baseUrl = 'https://ramseysmarttax.taxslayer.com/myaccount/register.aspx';
+var token = document.querySelectorAll('[data-raid-token]', '[raid-token]');
+var appendRaidToUrl = function () {
+    var queryKey = 'src';
+    var localRaid = localStorage.getItem('ramseyAnonymousId');
+    var buttons = document.querySelectorAll('[data-raid-token]', '[raid-token]');
+    if (localRaid) {
+        for (var i = 0, len = buttons.length; i < len; i++) {
+            try {
+                var button = buttons[i];
+                var preUrl = new URL(button.href);
+                var preParams = new URLSearchParams(preUrl.search);
+                preParams.append(queryKey, localRaid);
+                var finalUrl = new URL(baseUrl);
+                finalUrl.search = preParams.toString()
+                button.href = finalUrl.toString();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+};
+if ((token) && (RAID.storeRAID) && (RAID.pushRAID)) {
+    RAID.storeRAID();
+    RAID.pushRAID();
+    appendRaidToUrl();
+}
